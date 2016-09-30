@@ -86,9 +86,6 @@ int StRtmpPublishClient::Publish(string input, RtmpUrl* url){
         // publish the whole av of flv file
         ret = PublishAV(flv, timebase, &starttime, &endtime);
         
-        if (ret != ERROR_SUCCESS) {
-            break;
-        }
         // restart when flv EOF
         if (srs_flv_is_eof(ret)) {
             srs_flv_lseek(flv, 0);
@@ -96,6 +93,9 @@ int StRtmpPublishClient::Publish(string input, RtmpUrl* url){
             Info("republish for flv EOF, timebase=%"PRId64", start=%d, end=%d, ret=%d", 
                 timebase, starttime, endtime, ret);
             continue;
+        }
+        if (ret != ERROR_SUCCESS) {
+            break;
         }
     }
     srs_flv_close(flv);
